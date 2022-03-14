@@ -17,9 +17,12 @@ class Person:
             f'Phone: {self.phone_number}\n'
             f'Id: {self.contact_id}'
         )
-        
+    
 
 print("Welcome to the Contact Book!")
-print("Choose one of the following options by entering a number between 1-5:")
-
-
+print("What would you like to do?\n")
+print("1. View Contact")
+print("2. Add Contact")
+print("3. Edit Contact")
+print("4. Remove Contact")
+print("5. Exit Contact Book\n")
