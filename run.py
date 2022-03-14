@@ -38,7 +38,8 @@ while user_choice != "5":
     user_choice = input("Enter a number between 1-5: ")
 
     if user_choice == "1":
-        print("You chose 1")
+        for contact in contacts:
+            print(contact)
 
     elif user_choice == "2":
         fname = input("First name: ")
