@@ -50,3 +50,22 @@ while user_choice != "5":
         new_contact = Person(fname, lname, age, email, phone_number)
         contacts.append(new_contact)
     
+    elif user_choice == "3":
+        edit_id = input("Please enter the ID of the contact you'd like to edit\n")
+        for contact in contacts:
+            if int(edit_id) == contact.contact_id:
+                print(f'Current First Name: {contact.fname}\n')
+                contact.fname = input("Enter new name: ")
+
+                print(f'Current Last Name: {contact.lname}\n')
+                contact.lname = input("Enter new name: ")
+
+                print(f'Current Age: {contact.age}\n')
+                contact.age = input("Enter new age: ")
+
+                print(f'Current Email: {contact.email}\n')
+                contact.email = input("Enter new email: ")
+
+                print(f'Current Phone Number: {contact.phone_number}\n')
+                contact.phone_number = input("Enter new phone number: ")
+                
