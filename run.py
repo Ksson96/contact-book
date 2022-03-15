@@ -20,7 +20,7 @@ class Person:
             f'Email: {self.email}\n'
             f'Phone: {self.phone_number}\n'
         )
-    
+
 
 contacts = list()
 
@@ -63,7 +63,7 @@ def start():
 
         elif user_choice == "2":
             create_contact()
-        
+
         elif user_choice == "3":
             edit_contact()
 
