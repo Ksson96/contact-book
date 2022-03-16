@@ -1,45 +1,50 @@
 import gspread
 from google.oauth2.service_account import Credentials
 
+
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
     ]
 
-CREDS = Credentials.from_serivce_account_file('creds.json')
+CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('contact_book')
 
-user_data = SHEET.worksheet('contact_data')
+contact_data = SHEET.worksheet('contact_data')
 
 
-class Person:
-    """Person Object"""
-    __CONTACT_ID = 1
-
-    def __init__(self, fname, lname, age, email, phone_number):
-        """Instance of Person"""
-        self.fname = fname
-        self.lname = lname
-        self.age = age
-        self.email = email
-        self.phone_number = phone_number
-        self.contact_id = Person.__CONTACT_ID
-        Person.__CONTACT_ID += 1
-
-    def __str__(self):
-        return(
-            f'Id: {self.contact_id}\n'
-            f'Name: {self.fname} {self.lname}\n'
-            f'Age: {self.age}\n'
-            f'Email: {self.email}\n'
-            f'Phone: {self.phone_number}\n'
-        )
 
 
-contacts = list()
+# class Person:
+#     """Person Object"""
+
+#     __CONTACT_ID = max_id
+
+#     def __init__(self, fname, lname, age, email, phone_number):
+#         """Instance of Person"""
+#         # self._registry.append(self)
+#         self.contact_id = Person.__CONTACT_ID
+#         self.fname = fname
+#         self.lname = lname
+#         self.age = age
+#         self.email = email
+#         self.phone_number = phone_number
+#         Person.__CONTACT_ID += 1
+
+#     def __str__(self):
+#         return(
+#             f'Id: {self.contact_id}\n'
+#             f'Name: {self.fname} {self.lname}\n'
+#             f'Age: {self.age}\n'
+#             f'Email: {self.email}\n'
+#             f'Phone: {self.phone_number}\n'
+#         )
+
+
+contacts = contact_data.get_all_records()
 
 
 def view_contacts():
@@ -50,13 +55,18 @@ def view_contacts():
 
 def create_contact():
     """Create Contact"""
+
+    cId = [int(x) for x in contact_data.col_values(1)]
+    max_cid = max(cId)
+
+    contact_id = max_cid + 1
     fname = input("First name: ")
     lname = input("Last name: ")
     age = input("Age: ")
     email = input("Email Address: ")
     phone_number = input("Phone number: ")
-    new_contact = Person(fname, lname, age, email, phone_number)
-    contacts.append(new_contact)
+    new_contact = [contact_id, fname, lname, age, email, phone_number]
+    contact_data.append_row(new_contact)
 
 
 def start():
