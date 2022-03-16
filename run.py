@@ -40,16 +40,14 @@ SHEET = GSPREAD_CLIENT.open('contact_book')
 #         )
 
 
-# contacts = contact_data.get_all_records()
-
 def view_contacts(contact_data):
     """View Contacts"""
+    print('****--- Displaying All Contacts ---***\n')
     contacts = contact_data.get_all_records()
-    print(contacts)
-
-# def get_sheet_data():
-#     contact_data = SHEET.worksheet('contact_data')
-#     contact_id = max([int(x) for x in contact_data.col_values(1)]) + 1
+    for contact in contacts:       
+        for contact_details in contact:
+            print(f'{contact_details}: {contact[contact_details]}')
+        print('----------\n')
 
 
 def calc_new_contact_id(contact_data):
@@ -89,10 +87,10 @@ def start():
         print("3. Edit Contact")
         print("4. Remove Contact")
         print("5. Exit Contact Book\n")
-        user_choice = input("Enter a number between 1-5: ")
+        user_choice = input("Enter a number between 1-5: \n")
 
         contact_data = SHEET.worksheet('contact_data')
-        
+       
         if user_choice == "1":
             view_contacts(contact_data)
 
