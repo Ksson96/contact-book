@@ -13,10 +13,6 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('contact_book')
 
-contact_data = SHEET.worksheet('contact_data')
-
-
-
 
 # class Person:
 #     """Person Object"""
@@ -44,22 +40,32 @@ contact_data = SHEET.worksheet('contact_data')
 #         )
 
 
-contacts = contact_data.get_all_records()
+# contacts = contact_data.get_all_records()
 
-
-def view_contacts():
+def view_contacts(contact_data):
     """View Contacts"""
-    for contact in contacts:
-        print(contact)
+    contacts = contact_data.get_all_records()
+    print(contacts)
+
+# def get_sheet_data():
+#     contact_data = SHEET.worksheet('contact_data')
+#     contact_id = max([int(x) for x in contact_data.col_values(1)]) + 1
 
 
-def create_contact():
+def calc_new_contact_id(contact_data):
+    """
+    Convert str list of IDs to int and return biggest number +1
+    """
+    contact_ids = contact_data.col_values(1)
+    del contact_ids[0]
+
+    return max([int(x) for x in contact_ids]) + 1
+
+
+def create_contact(contact_data, new_contact_id):
     """Create Contact"""
 
-    cId = [int(x) for x in contact_data.col_values(1)]
-    max_cid = max(cId)
-
-    contact_id = max_cid + 1
+    contact_id = new_contact_id
     fname = input("First name: ")
     lname = input("Last name: ")
     age = input("Age: ")
@@ -85,11 +91,14 @@ def start():
         print("5. Exit Contact Book\n")
         user_choice = input("Enter a number between 1-5: ")
 
+        contact_data = SHEET.worksheet('contact_data')
+        
         if user_choice == "1":
-            view_contacts()
+            view_contacts(contact_data)
 
         elif user_choice == "2":
-            create_contact()
+            new_contact_id = calc_new_contact_id(contact_data)
+            create_contact(contact_data, new_contact_id)
 
         elif user_choice == "3":
             edit_contact()
