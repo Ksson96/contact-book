@@ -90,7 +90,7 @@ def start():
         user_choice = input("Enter a number between 1-5: \n")
 
         contact_data = SHEET.worksheet('contact_data')
-       
+    
         if user_choice == "1":
             view_contacts(contact_data)
 
@@ -99,38 +99,31 @@ def start():
             create_contact(contact_data, new_contact_id)
 
         elif user_choice == "3":
-            edit_contact()
+            edit_contact(contact_data)
 
         elif user_choice == "4":
             delete_contact()
 
 
-def edit_contact():
+def edit_contact(contact_data):
     """Edit Contact"""
     edit_id = input("Please enter the ID of the contact you'd like to edit\n")
+    contacts = contact_data.get_all_records()
+    cell = contact_data.find(edit_id)
     for contact in contacts:
-        if int(edit_id) == contact.contact_id:
-            print(f'Current First Name: {contact.fname}\n')
-            contact.fname = input("Enter new name: ")
-
-            print(f'Current Last Name: {contact.lname}\n')
-            contact.lname = input("Enter new name: ")
-
-            print(f'Current Age: {contact.age}\n')
-            contact.age = input("Enter new age: ")
-
-            print(f'Current Email: {contact.email}\n')
-            contact.email = input("Enter new email: ")
-
-            print(f'Current Phone Number: {contact.phone_number}\n')
-            contact.phone_number = input("Enter new phone number: ")
+        for contact_details in contact:
+            if contact[contact_details] == int(edit_id):
+                fname = input("Enter new name: ")                
+                lname = input("Enter new name: ")                
+                age = input("Enter new age: ")                
+                email = input("Enter new email: ")                
+                phone_number = input("Enter new phone number: ")
+                contact_data.update(f'B{cell.row}:F{cell.row}', [[fname, lname, age, email, phone_number]])
+    print('Contact updated successfully!')
 
 
-def delete_contact():
-    """
-    Delete function
-    """
-    print("Placeholder functionality")
+def delete_contect():
+    print('Placeholder function')
 
 
 start()
