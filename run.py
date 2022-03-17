@@ -14,32 +14,6 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('contact_book')
 
 
-# class Person:
-#     """Person Object"""
-
-#     __CONTACT_ID = max_id
-
-#     def __init__(self, fname, lname, age, email, phone_number):
-#         """Instance of Person"""
-#         # self._registry.append(self)
-#         self.contact_id = Person.__CONTACT_ID
-#         self.fname = fname
-#         self.lname = lname
-#         self.age = age
-#         self.email = email
-#         self.phone_number = phone_number
-#         Person.__CONTACT_ID += 1
-
-#     def __str__(self):
-#         return(
-#             f'Id: {self.contact_id}\n'
-#             f'Name: {self.fname} {self.lname}\n'
-#             f'Age: {self.age}\n'
-#             f'Email: {self.email}\n'
-#             f'Phone: {self.phone_number}\n'
-#         )
-
-
 def view_contacts(contact_data):
     """View Contacts"""
     print('****--- Displaying All Contacts ---***\n')
@@ -102,17 +76,22 @@ def start():
             edit_contact(contact_data)
 
         elif user_choice == "4":
-            delete_contact()
+            delete_contact(contact_data)
+
+
+# def find_contact(contact_data, contact_id):
+#     cell = contact_data.find(contact_id)
+#     return cell
 
 
 def edit_contact(contact_data):
     """Edit Contact"""
-    edit_id = input("Please enter the ID of the contact you'd like to edit\n")
+    contact_id = input("Please enter the ID of the contact you'd like to edit\n")
     contacts = contact_data.get_all_records()
-    cell = contact_data.find(edit_id)
+    cell = contact_data.find(contact_id)
     for contact in contacts:
         for contact_details in contact:
-            if contact[contact_details] == int(edit_id):
+            if contact[contact_details] == int(contact_id):
                 fname = input("Enter new name: ")                
                 lname = input("Enter new name: ")                
                 age = input("Enter new age: ")                
@@ -122,8 +101,17 @@ def edit_contact(contact_data):
     print('Contact updated successfully!')
 
 
-def delete_contect():
-    print('Placeholder function')
+def display_contact(contact_data, contact_id):
+    """
+    Returns contact information for given contact id
+    """
+    cell = contact_data.find(contact_id)
+    contact = contact_data.row_values(cell.row)
+    print(f'Id: {contact[0]} \n')
+    print(f'Name: {contact[1]} {contact[2]} \n')
+    print(f'Age: {contact[3]}\n')
+    print(f'Email: {contact[4]}\n')
+    print(f'Number: {contact[5]}\n')
 
 
 start()
