@@ -101,6 +101,21 @@ def edit_contact(contact_data):
     print('Contact updated successfully!')
 
 
+def delete_contact(contact_data):
+    """ Delete Contact """
+
+    contact_id = input("Please enter the ID of the contact you'd like to remove\n")
+    print("---Displaying Contact to Remove---\n")
+    display_contact(contact_data, contact_id)
+    confirmation = input(
+        "Are you sure you wish to permanently remove this contact? Y: Yes / N: No\n"
+    )
+    if confirmation == "Y":
+        contact_data.delete_rows(contact_data.find(contact_id).row)
+    else:
+        start()
+
+
 def display_contact(contact_data, contact_id):
     """
     Returns contact information for given contact id
