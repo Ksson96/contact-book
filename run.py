@@ -107,9 +107,7 @@ def delete_contact(contact_data):
     contact_id = input("Please enter the ID of the contact you'd like to remove\n")
     print("---Displaying Contact to Remove---\n")
     display_contact(contact_data, contact_id)
-    confirmation = input(
-        "Are you sure you wish to permanently remove this contact? Y: Yes / N: No\n"
-    )
+    confirmation = input("\nAre you sure you wish to permanently remove this contact? Y: Yes / N: No\n").capitalize()
     if confirmation == "Y":
         contact_data.delete_rows(contact_data.find(contact_id).row)
     else:
@@ -120,13 +118,18 @@ def display_contact(contact_data, contact_id):
     """
     Returns contact information for given contact id
     """
-    cell = contact_data.find(contact_id)
-    contact = contact_data.row_values(cell.row)
-    print(f'Id: {contact[0]} \n')
-    print(f'Name: {contact[1]} {contact[2]} \n')
-    print(f'Age: {contact[3]}\n')
-    print(f'Email: {contact[4]}\n')
-    print(f'Number: {contact[5]}\n')
+    contacts = contact_data.get_all_records()
+    for contact in contacts:
+        if contact['Contact_Id'] == int(contact_id):
+            for key, value in contact.items():
+                print(f'{key}: {value}')
+# cell = contact_data.find(contact_id)
+# contact = contact_data.row_values(cell.row)
+# print(f'Id: {contact[0]} \n')
+# print(f'Name: {contact[1]} {contact[2]} \n')
+# print(f'Age: {contact[3]}\n')
+# print(f'Email: {contact[4]}\n')
+# print(f'Number: {contact[5]}\n')
 
 
 start()
