@@ -18,13 +18,13 @@ def start():
     """
     Displays all menu options to the user
     """
-    print('''
+    user_choice = ""
+    while user_choice != "5":
+        print('''
     ------------------------------------
     --- Welcome to the Contact Book! ---
     ------------------------------------
     ''')
-    user_choice = ""
-    while user_choice != "5":
         print('''
     What would you like to do?
     ----------------
@@ -88,19 +88,25 @@ def edit_contact(contact_data):
             return False
         elif contact_id.capitalize() == "Q":
             print('---Quittinng and returning to main menu...---')
-            break
+            return False
         
 
-# def delete_contact(contact_data):
-#     """ Delete Contact """
-#     while True:
-#         contact_id = input("Please enter the ID of the contact you'd like to remove\n")
-#         display_contact(contact_data)
-#         confirmation = input("\nAre you sure you wish to permanently remove this contact? Y: Yes / N: No\n").capitalize()
-#         if confirmation == "Y":
-#             contact_data.delete_rows(contact_data.find(contact_id).row)
-#         else:
-#             start()
+def delete_contact(contact_data):
+    """ Delete Contact """
+    while True:
+        contact_id = display_contact(contact_data)
+        if contact_id:
+            confirm = input("\nAre you sure you wish to permanently delete this contact? Y: Yes / N: No\n")
+            if confirm.capitalize() == "Y":
+                contact_data.delete_rows(contact_data.find(contact_id).row)
+                print("The requested contact has been permanently deleted!\n")
+                print("Returning to main menu...\n")
+                break
+            elif confirm.capitalize() == "N":
+                print("\nReturning to main menu...")
+                break
+            else:
+                print("Please only enter Y / N")
 
 
 def display_contact(contact_data):
@@ -109,7 +115,7 @@ def display_contact(contact_data):
     """
     contacts = contact_data.get_all_records()
     contact_id = input("\nEnter an existing contact's ID (Q to quit)\n")
-    if any(contact['Contact_Id'] == int(contact_id) for contact in contacts):
+    if any(str(contact['Contact_Id']) == (contact_id) for contact in contacts):
         for contact in contacts:
             if contact['Contact_Id'] == int(contact_id):
                 print("---Displaying Contact---\n")
