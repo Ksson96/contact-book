@@ -23,7 +23,9 @@ def start():
     --- Welcome to the Contact Book! ---
     ------------------------------------
     ''')
-    print('''
+    user_choice = ""
+    while user_choice != "5":
+        print('''
     What would you like to do?
     ----------------
     1. View Contacts
@@ -33,8 +35,6 @@ def start():
     5. Exit Contact Book
     ----------------
         ''')
-    user_choice = ""
-    while user_choice != "5":
         user_choice = input("\nEnter a number between 1-5: \n")
         contact_data = SHEET.worksheet('contact_data')
         if user_choice == "1":
@@ -72,46 +72,53 @@ def create_contact(contact_data, contact_id):
 def edit_contact(contact_data):
     """Edit Contact"""
     while True:
-        contact_id = input("Please enter the ID of the contact you'd like to edit\n")
-        cell = contact_data.find(contact_id)
-        display_contact(contact_data, contact_id)
-        if cell:
-            updated_contact = create_details_list()
-            contact_data.update(
-                f'B{cell.row}:F{cell.row}',
-                [updated_contact])
-            print('\n----Contact updated successfully!----')
+        contact_id = display_contact(contact_data)
+        if contact_id:
+            confirm = input("\n(Press enter to continue / Enter Q to quit)\n")
+            while confirm.capitalize() != "Q":
+                cell = contact_data.find(contact_id)
+                print("Please provide a new..")
+                updated_contact = create_details_list()
+                confirm = input("\n(Press enter to confirm changes / Q to quit)\n")
+                contact_data.update(
+                    f'B{cell.row}:F{cell.row}',
+                    [updated_contact])
+                print('\n----Contact updated successfully!----')
+                break
+            return False
+        elif contact_id.capitalize() == "Q":
+            print('---Quittinng and returning to main menu...---')
             break
-        else:
-            continue
+        
+
+# def delete_contact(contact_data):
+#     """ Delete Contact """
+#     while True:
+#         contact_id = input("Please enter the ID of the contact you'd like to remove\n")
+#         display_contact(contact_data)
+#         confirmation = input("\nAre you sure you wish to permanently remove this contact? Y: Yes / N: No\n").capitalize()
+#         if confirmation == "Y":
+#             contact_data.delete_rows(contact_data.find(contact_id).row)
+#         else:
+#             start()
 
 
-def delete_contact(contact_data):
-    """ Delete Contact """
-
-    contact_id = input("Please enter the ID of the contact you'd like to remove\n")
-    print("---Displaying Contact to Remove---\n")
-    display_contact(contact_data, contact_id)
-    confirmation = input("\nAre you sure you wish to permanently remove this contact? Y: Yes / N: No\n").capitalize()
-    if confirmation == "Y":
-        contact_data.delete_rows(contact_data.find(contact_id).row)
-    else:
-        start()
-
-
-def display_contact(contact_data, contact_id):
+def display_contact(contact_data):
     """
     Returns contact information for given contact id
     """
     contacts = contact_data.get_all_records()
+    contact_id = input("\nEnter an existing contact's ID (Q to quit)\n")
     if any(contact['Contact_Id'] == int(contact_id) for contact in contacts):
         for contact in contacts:
             if contact['Contact_Id'] == int(contact_id):
                 print("---Displaying Contact---\n")
                 for key, value in contact.items():
                     print(f'{key}: {value}')
+        return contact_id
     else:
         print("The user you're looking for doesn't seem to exist")
+        return False
 
 
 def calc_new_contact_id(contact_data):
@@ -134,11 +141,6 @@ def create_details_list():
     email = input("Email Address: ")
     phone_number = input("Phone number: ")
     return [fname, lname, age, email, phone_number]
-
-
-# def confirm_choice(user_input):
-#     if user_input.capitalize() == "Y":
-#         return: 
 
 
 start()
