@@ -38,6 +38,7 @@ def start():
         user_choice = input("\nEnter a number between 1-5: \n")
         contact_data = SHEET.worksheet('contact_data')
         if user_choice == "1":
+            print('\n--- Displaying All Contacts ---\n')
             view_contacts(contact_data)
         elif user_choice == "2":
             new_contact_id = calc_new_contact_id(contact_data)
@@ -53,7 +54,6 @@ def start():
 
 def view_contacts(contact_data):
     """View Contacts"""
-    print('****--- Displaying All Contacts ---***\n')
     contacts = contact_data.get_all_records()
     for contact in contacts:       
         for contact_details in contact:
@@ -61,35 +61,24 @@ def view_contacts(contact_data):
         print('----------\n')
 
 
-def create_contact(contact_data, new_contact_id):
+def create_contact(contact_data, contact_id):
     """Create Contact"""
 
-    contact_id = new_contact_id
-    fname = input("First name: ")
-    lname = input("Last name: ")
-    age = input("Age: ")
-    email = input("Email Address: ")
-    phone_number = input("Phone number: ")
-    new_contact = [contact_id, fname, lname, age, email, phone_number]
+    new_contact = create_details_list()
+    new_contact.insert(0, contact_id)
     contact_data.append_row(new_contact)
 
 
 def edit_contact(contact_data):
     """Edit Contact"""
     contact_id = input("Please enter the ID of the contact you'd like to edit\n")
-    while display_contact(contact_data, contact_id):
-        print("---Displaying Contact to Edit---\n")
-        for key, value in display_contact(contact_data, contact_id).items():
-            print(f'{key}: {value}')
+    if display_contact(contact_data, contact_id) is not False:
         cell = contact_data.find(contact_id)
-        fname = input("Enter new name: ")
-        lname = input("Enter new name: ")
-        age = input("Enter new age: ")
-        email = input("Enter new email: ")
-        phone_number = input("Enter new phone number: ")
-        contact_data.update(f'B{cell.row}:F{cell.row}', [[fname, lname, age, email, phone_number]])
+        updated_contact = create_details_list()
+        contact_data.update(
+            f'B{cell.row}:F{cell.row}',
+            [updated_contact])
         print('\n----Contact updated successfully!----')
-        break
     else:
         print("The user you're looking for doesn't seem to exist")
 
@@ -112,9 +101,12 @@ def display_contact(contact_data, contact_id):
     Returns contact information for given contact id
     """
     contacts = contact_data.get_all_records()
-    for contact in contacts:
-        if int(contact_id) == contact['Contact_Id']:
-            return contact
+    if any(contact['Contact_Id'] == int(contact_id) for contact in contacts):
+        for contact in contacts:
+            if contact['Contact_Id'] == int(contact_id):
+                print("---Displaying Contact---\n")
+                for key, value in contact.items():
+                    print(f'{key}: {value}')
 
 
 def calc_new_contact_id(contact_data):
@@ -125,6 +117,18 @@ def calc_new_contact_id(contact_data):
     del contact_ids[0]
 
     return max([int(x) for x in contact_ids]) + 1
+
+
+def create_details_list():
+    """
+    Returns contact details from user input as a list
+    """
+    fname = input("\nFirst name: ")
+    lname = input("Last name: ")
+    age = input("Age: ")
+    email = input("Email Address: ")
+    phone_number = input("Phone number: ")
+    return [fname, lname, age, email, phone_number]
 
 
 start()
