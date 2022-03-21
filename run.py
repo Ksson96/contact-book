@@ -18,16 +18,22 @@ def start():
     """
     Displays all menu options to the user
     """
+    print('''
+    ------------------------------------
+    --- Welcome to the Contact Book! ---
+    ------------------------------------
+    ''')
+    print('''
+    What would you like to do?
+    ----------------
+    1. View Contacts
+    2. Add Contact
+    3. Edit Contact
+    4. Remove Contact
+    5. Exit Contact Book
+    ----------------
+        ''')
     user_choice = ""
-    print("Welcome to the Contact Book!")
-
-    print("What would you like to do?\n")
-    print("1. View Contacts")
-    print("2. Add Contact")
-    print("3. Edit Contact")
-    print("4. Remove Contact")
-    print("5. Exit Contact Book")
-
     while user_choice != "5":
         user_choice = input("\nEnter a number between 1-5: \n")
         contact_data = SHEET.worksheet('contact_data')
