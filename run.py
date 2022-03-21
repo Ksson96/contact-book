@@ -71,16 +71,19 @@ def create_contact(contact_data, contact_id):
 
 def edit_contact(contact_data):
     """Edit Contact"""
-    contact_id = input("Please enter the ID of the contact you'd like to edit\n")
-    if display_contact(contact_data, contact_id) is not False:
+    while True:
+        contact_id = input("Please enter the ID of the contact you'd like to edit\n")
         cell = contact_data.find(contact_id)
-        updated_contact = create_details_list()
-        contact_data.update(
-            f'B{cell.row}:F{cell.row}',
-            [updated_contact])
-        print('\n----Contact updated successfully!----')
-    else:
-        print("The user you're looking for doesn't seem to exist")
+        display_contact(contact_data, contact_id)
+        if cell:
+            updated_contact = create_details_list()
+            contact_data.update(
+                f'B{cell.row}:F{cell.row}',
+                [updated_contact])
+            print('\n----Contact updated successfully!----')
+            break
+        else:
+            continue
 
 
 def delete_contact(contact_data):
@@ -107,6 +110,8 @@ def display_contact(contact_data, contact_id):
                 print("---Displaying Contact---\n")
                 for key, value in contact.items():
                     print(f'{key}: {value}')
+    else:
+        print("The user you're looking for doesn't seem to exist")
 
 
 def calc_new_contact_id(contact_data):
@@ -129,6 +134,11 @@ def create_details_list():
     email = input("Email Address: ")
     phone_number = input("Phone number: ")
     return [fname, lname, age, email, phone_number]
+
+
+# def confirm_choice(user_input):
+#     if user_input.capitalize() == "Y":
+#         return: 
 
 
 start()
