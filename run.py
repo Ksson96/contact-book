@@ -144,21 +144,40 @@ def create_details_list():
     """
     Returns contact details from user input as a list
     """
+    while True:
         fname = input("\nFirst name: ")
-        lname = input("Last name: ")
-        age = input("Age: ")
-        while True:
-            email = input("Email Address: ")
-            if validate_email():
-                break
-            else:
-                continue
+        if not fname.isalpha():
+            print("Please only enter letters between a-Z")
+            continue
+        else:
+            break
+    while True:
+        lname = input("\nLast name: ")
+        if not lname.isalpha():
+            print("Please only enter letters between a-Z")
+            continue
+        else:
+            break
+    while True:
+        age = input("\nAge: ")
+        if not validate_age(age):
+            continue
+        else:
+            break
+    while True:
+        email = input("\nEmail Address: ")
+        if validate_email(email):
+            continue
+        else:
+            break
+    while True:
+        phone_number = input("\nPhone number: ")
+        if not validate_phone(phone_number):
+            continue
+        else:
+            break
             
-        if:
-            phone_number = input("Phone number: ")
-        return [fname, lname, age, email, phone_number]
-
-    
+    return [fname, lname, age, email, phone_number]
 
 
 def validate_email(email):
@@ -172,5 +191,31 @@ def validate_email(email):
     else:
         print("Email-adress not valid!")
         return False
+
+
+def validate_phone(phone):
+    """
+    Validates user inputted phone number
+    """
+    rex = r"^[0-9]"
+    
+    if (re.fullmatch(rex, phone)) and len(phone) <= 11:
+        return True
+    else:
+        print("Please enter a valid number")
+        False
+
+
+def validate_age(age):
+    """
+    Validates user inputted age
+    """
+    rex = "^[1-9][0-9]?$|^100$"
+    if(re.fullmatch(rex, age)):
+        return True
+    else:
+        print("Please enter a valid age")
+        return False
+
 
 start()
