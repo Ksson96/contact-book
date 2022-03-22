@@ -203,7 +203,6 @@ def validate_phone(phone):
         return True
     else:
         print("Please enter a valid number")
-        False
 
 
 def validate_age(age):
