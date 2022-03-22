@@ -27,6 +27,9 @@ def start():
     ------------------------------------
     ''')
         print('''
+    ---------------------------
+    ---------Main Menu---------
+    ---------------------------
     What would you like to do?
     ----------------
     1. View Contacts
@@ -46,9 +49,10 @@ def start():
             create_contact(contact_data, new_contact_id)
         elif user_choice == "3":
             edit_contact(contact_data)
-
         elif user_choice == "4":
             delete_contact(contact_data)
+        elif user_choice == "5":
+            print("Exiting Contact Book")
         else:
             print(f'"{user_choice}" is not a valid option.')
 
@@ -60,7 +64,7 @@ def view_contacts(contact_data):
         for contact_details in contact:
             print(f'{contact_details}: {contact[contact_details]}')
         print('----------\n')
-    input("Press enter to return to main menu")
+    print("Showing all existing contacts")
 
 
 def create_contact(contact_data, contact_id):
@@ -77,22 +81,35 @@ def edit_contact(contact_data):
     while True:
         contact_id = display_contact(contact_data)
         if contact_id:
-            confirm = input("\n(Press enter to continue / Enter Q to quit)\n")
-            while confirm.capitalize() != "Q":
-                cell = contact_data.find(contact_id)
-                print("Please provide a new..")
-                updated_contact = create_details_list()
-                confirm = input("\n(Press enter to confirm changes / Q to quit)\n")
-                contact_data.update(
-                    f'B{cell.row}:F{cell.row}',
-                    [updated_contact])
-                print('\n----Contact updated successfully!----')
-                break
-            return False
-        elif contact_id.capitalize() == "Q":
-            print('---Quittinng and returning to main menu...---')
-            return False
-        
+            while True:
+                confirm = input("\n(Press enter to continue / Enter Q to quit)\n")
+                if confirm.capitalize() == "Q":
+                    print("\nQuitting and returning to main menu...\n")
+                    return False
+                else:
+                    cell = contact_data.find(contact_id)
+                    print("Editing contact..")
+                    updated_contact = create_details_list()
+                    confirm = input("\n(Press enter to confirm changes / Q to quit)\n")
+                if confirm.capitalize() == "Q":
+                    print("Quitting and returning to main menu...")
+                    return False
+                else:
+                    contact_data.update(
+                        f'B{cell.row}:F{cell.row}',
+                        [updated_contact])
+                    print('\n----Contact updated successfully!----')
+                    return False
+        else:
+            view_contacts(contact_data)
+            input("\nPress Enter to continue")
+            continue
+
+        break
+    else:
+        print('---Quitting and returning to main menu...---')
+        return False
+
 
 def delete_contact(contact_data):
     """ Delete Contact """
@@ -117,7 +134,7 @@ def display_contact(contact_data):
     Returns contact information for given contact id
     """
     contacts = contact_data.get_all_records()
-    contact_id = input("\nEnter an existing contact's ID (Q to quit)\n")
+    contact_id = input("\nEnter an existing contact's ID:\n")
     if any(str(contact['Contact_Id']) == (contact_id) for contact in contacts):
         for contact in contacts:
             if contact['Contact_Id'] == int(contact_id):
@@ -126,7 +143,7 @@ def display_contact(contact_data):
                     print(f'{key}: {value}')
         return contact_id
     else:
-        print("The user you're looking for doesn't seem to exist")
+        print("The user you're looking for doesn't seem to exist\n")
         return False
 
 
@@ -176,7 +193,7 @@ def create_details_list():
             continue
         else:
             break
-            
+
     return [fname, lname, age, email, phone_number]
 
 
