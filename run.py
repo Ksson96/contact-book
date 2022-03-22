@@ -166,7 +166,7 @@ def create_details_list():
             break
     while True:
         email = input("\nEmail Address: ")
-        if validate_email(email):
+        if not validate_email(email):
             continue
         else:
             break
