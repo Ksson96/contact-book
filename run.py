@@ -199,7 +199,7 @@ def validate_phone(phone):
     """
     rex = r"^[0-9]"
     
-    if (re.fullmatch(rex, phone)) and len(phone) <= 11:
+    if (re.match(rex, phone)) and len(phone) < 11:
         return True
     else:
         print("Please enter a valid number")
