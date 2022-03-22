@@ -1,5 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
+import re
 
 
 SCOPE = [
@@ -143,12 +144,33 @@ def create_details_list():
     """
     Returns contact details from user input as a list
     """
-    fname = input("\nFirst name: ")
-    lname = input("Last name: ")
-    age = input("Age: ")
-    email = input("Email Address: ")
-    phone_number = input("Phone number: ")
-    return [fname, lname, age, email, phone_number]
+        fname = input("\nFirst name: ")
+        lname = input("Last name: ")
+        age = input("Age: ")
+        while True:
+            email = input("Email Address: ")
+            if validate_email():
+                break
+            else:
+                continue
+            
+        if:
+            phone_number = input("Phone number: ")
+        return [fname, lname, age, email, phone_number]
 
+    
+
+
+def validate_email(email):
+    """
+    Validates user inputted email adress
+    """
+    rex = "^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$"
+
+    if(re.fullmatch(rex, email)):
+        return True
+    else:
+        print("Email-adress not valid!")
+        return False
 
 start()
