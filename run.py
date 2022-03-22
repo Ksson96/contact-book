@@ -59,14 +59,16 @@ def view_contacts(contact_data):
         for contact_details in contact:
             print(f'{contact_details}: {contact[contact_details]}')
         print('----------\n')
+    input("Press enter to return to main menu")
 
 
 def create_contact(contact_data, contact_id):
     """Create Contact"""
-
+    print("Creating a new contact...")
     new_contact = create_details_list()
     new_contact.insert(0, contact_id)
     contact_data.append_row(new_contact)
+    print("New contact created successfully")
 
 
 def edit_contact(contact_data):
