@@ -1,6 +1,6 @@
+import re
 import gspread
 from google.oauth2.service_account import Credentials
-import re
 
 
 SCOPE = [
@@ -21,11 +21,6 @@ def start():
     """
     user_choice = ""
     while user_choice != "5":
-        print('''
-    ------------------------------------
-    --- Welcome to the Contact Book! ---
-    ------------------------------------
-    ''')
         print('''
     ---------------------------
     ---------Main Menu---------
@@ -60,11 +55,11 @@ def start():
 def view_contacts(contact_data):
     """View Contacts"""
     contacts = contact_data.get_all_records()
-    for contact in contacts:       
+    for contact in contacts:
         for contact_details in contact:
             print(f'{contact_details}: {contact[contact_details]}')
         print('----------\n')
-    print("Showing all existing contacts")
+    input("Showing all existing contacts (Press Enter to Continue)")
 
 
 def create_contact(contact_data, contact_id):
@@ -82,7 +77,7 @@ def edit_contact(contact_data):
         contact_id = display_contact(contact_data)
         if contact_id:
             while True:
-                confirm = input("\n(Press enter to continue / Enter Q to quit)\n")
+                confirm = input("\n(Enter to continue / Enter Q to quit)\n")
                 if confirm.capitalize() == "Q":
                     print("\nQuitting and returning to main menu...\n")
                     return False
@@ -90,7 +85,7 @@ def edit_contact(contact_data):
                     cell = contact_data.find(contact_id)
                     print("Editing contact..")
                     updated_contact = create_details_list()
-                    confirm = input("\n(Press enter to confirm changes / Q to quit)\n")
+                    confirm = input("\n(Enter to confirm changes / Q to quit)\n")
                 if confirm.capitalize() == "Q":
                     print("Quitting and returning to main menu...")
                     return False
@@ -102,7 +97,6 @@ def edit_contact(contact_data):
                     return False
         else:
             view_contacts(contact_data)
-            input("\nPress Enter to continue")
             continue
 
         break
@@ -127,6 +121,9 @@ def delete_contact(contact_data):
                 break
             else:
                 print("Please only enter Y / N")
+        else:
+            view_contacts(contact_data)
+            continue
 
 
 def display_contact(contact_data):
@@ -201,9 +198,9 @@ def validate_email(email):
     """
     Validates user inputted email adress
     """
-    rex = "^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$"
+    rex = r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$"
 
-    if(re.fullmatch(rex, email)):
+    if re.fullmatch(rex, email):
         return True
     else:
         print("Email-adress not valid!")
@@ -215,7 +212,6 @@ def validate_phone(phone):
     Validates user inputted phone number
     """
     rex = r"^[0-9]"
-    
     if (re.match(rex, phone)) and len(phone) < 11:
         return True
     else:
@@ -227,11 +223,23 @@ def validate_age(age):
     Validates user inputted age
     """
     rex = "^[1-9][0-9]?$|^100$"
-    if(re.fullmatch(rex, age)):
+    if re.fullmatch(rex, age):
         return True
     else:
         print("Please enter a valid age")
         return False
 
 
-start()
+def main():
+    """
+    Main function to run the program
+    """
+    print('''
+    ------------------------------------
+    --- Welcome to the Contact Book! ---
+    ------------------------------------
+    ''')
+    start()
+
+
+main()
