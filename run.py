@@ -49,7 +49,7 @@ def start():
         elif user_choice == "5":
             print("Exiting Contact Book")
         else:
-            print(f'"{user_choice}" is not a valid option.')
+            print('Not a valid option!')
 
 
 def view_contacts(contact_data):
@@ -85,7 +85,8 @@ def edit_contact(contact_data):
                     cell = contact_data.find(contact_id)
                     print("Editing contact..")
                     updated_contact = create_details_list()
-                    confirm = input("\n(Enter to confirm changes / Q to quit)\n")
+                    confirm = input(
+                        "\n(Enter to confirm changes / Q to quit)\n")
                 if confirm.capitalize() == "Q":
                     print("Quitting and returning to main menu...")
                     return False
@@ -110,7 +111,10 @@ def delete_contact(contact_data):
     while True:
         contact_id = display_contact(contact_data)
         if contact_id:
-            confirm = input("\nAre you sure you wish to permanently delete this contact? Y: Yes / N: No\n")
+            confirm = input(
+                "\nAre you sure you wish to permanently "
+                "delete this contact? Y: Yes / N: No\n"
+                )
             if confirm.capitalize() == "Y":
                 contact_data.delete_rows(contact_data.find(contact_id).row)
                 print("The requested contact has been permanently deleted!\n")
