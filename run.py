@@ -96,10 +96,12 @@ def edit_contact(contact_data):
                         [updated_contact])
                     print('\n----Contact updated successfully!----')
                     return False
+        elif contact_id is None:
+            print("\nQuitting and returning to main menu...\n")
+            break
         else:
             view_contacts(contact_data)
             continue
-
         break
     else:
         print('---Quitting and returning to main menu...---')
@@ -112,30 +114,42 @@ def delete_contact(contact_data):
         contact_id = display_contact(contact_data)
         if contact_id:
             confirm = input(
-                "\nAre you sure you wish to permanently "
+                "\nDo you want to permanently "
                 "delete this contact? Y: Yes / N: No\n"
+                "Q: Return to Main Menu / V: View contacts\n"
                 )
             if confirm.capitalize() == "Y":
                 contact_data.delete_rows(contact_data.find(contact_id).row)
                 print("The requested contact has been permanently deleted!\n")
                 print("Returning to main menu...\n")
                 break
-            elif confirm.capitalize() == "N":
-                print("\nReturning to main menu...")
+            elif confirm.capitalize() == "Q":
+                print("\nQuitting and returning to main menu...\n")
                 break
+            elif confirm.capitalize() == "N":
+                continue
+            elif confirm.capitalize() == "V":
+                view_contacts(contact_data)
+                continue
             else:
                 print("Please only enter Y / N")
+                continue
+        elif contact_id is None:
+            print("\nQuitting and returning to main menu...\n")
+            break
         else:
             view_contacts(contact_data)
             continue
-
+        
 
 def display_contact(contact_data):
     """
     Returns contact information for given contact id
     """
     contacts = contact_data.get_all_records()
-    contact_id = input("\nEnter an existing contact's ID:\n")
+    contact_id = input(
+        "\nEnter an existing contact's ID:\n"
+        "(Enter Q to return to Main Menu)\n")
     if any(str(contact['Contact_Id']) == (contact_id) for contact in contacts):
         for contact in contacts:
             if contact['Contact_Id'] == int(contact_id):
@@ -143,6 +157,8 @@ def display_contact(contact_data):
                 for key, value in contact.items():
                     print(f'{key}: {value}')
         return contact_id
+    elif contact_id.capitalize() == "Q":
+        return None
     else:
         print("The user you're looking for doesn't seem to exist\n")
         return False
