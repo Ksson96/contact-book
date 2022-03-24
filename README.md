@@ -6,6 +6,7 @@ contact information in google spreadsheet.
 * [UX](#ux)
   * [User Stories](#user-stories)
   * [Site Owner Goals](#site-owner-goals)
+  * [Data Structure](#data-structure)
 * [Features](#features)
   * [Existing Features](#existing-features)
   * [Future additions](#future-additions)
@@ -32,7 +33,22 @@ contact information in google spreadsheet.
 ## Site Owner Goals
 - As a site owner I want my functions to be dynamically applicable.
 - As a site owner I want validation to ensure the correct data is inputted.
-- As a site owner I want to make sure it's easy to add additional down the line. 
+- As a site owner I want to make sure it's easy to add additional down the line.
+
+## Data Structure
+The data is stored using the Gspread library in a google sheets document consisting of one table. The ID acts as a unique primary key for the contact and will automatically be chosen on contact creation. It will take all existing ID's into account and add +1 to the number, making sure every contact has it's unique ID. 
+
+Making queries to the spreadsheet aswell as updating and deleting a contact is therefore dependant on the contacts unique ID. I sought after addition in the future could come in the form of unique phone numbers aswell as E-mail adresses as they're in practice usually unique for each individual. 
+
+### Contact
+| Database Key  	| Type              	| Relationship 	|
+|---------------	|-------------------	|--------------	|
+| Contact_Id    	| Int(Unique)(Auto) 	| PK           	|
+| First Name    	| Str               	|              	|
+| Last Name     	| Str               	|              	|
+| Age           	| Str               	|              	|
+| E-Mail Adress 	| Str               	|              	|
+| Phone Number  	| Str               	|              	|
 
 # Features
 ## Existing Features
@@ -96,11 +112,24 @@ PEP8 Validator returned 0 issues.
 
 ## Testing
 - Initially the intention was to create the application using a OOP approach. This would have been easier if the data was stored locally in a seperate file. However when trying to create and update data with the Gspread library i ran in to multiple issues regarding object data types not being accepted by the Gspread methods provided. To remedy this I had to destructure my contact objects in to lists and vice versa. So to avoid any unecessary hurdles I switched approach.
+
+- Testing the application I went through the process of both creating, updating and deleting, however at every step of the way I entered the wrong information. Both updating a contact and creating a contact are validated using the same functions. When inputting numbers for names, letters for phone number and age aswell as a faulty email address, the application is responding to the wrongful input as expected. The same thing happens if nothing is provided at all as the validation requires that certain criteria are met for each input field.
+
+* One issue found was when confirming the deletion of a contact:
+- Entering "N" for no deletion resulted in the user being returned to main menu, while entering neither "Y" / "N" prompts the user for another ID which is the expected result of "N". Therefore a new "Q" option was added for the user to return to the main menu while "N" instead gives the expected result. 
   
 ## Bugs
 * <strong>Problem</strong> 🐞: Application on Heroku returned a 404 Error.
 * <strong>Cause</strong>🛠: Python Essentials Template files were missing since project was created without it.
 * <strong>Resolution</strong>✅: Manually added all files and folders included in the Code Institute Python Template.
+---
+* <strong>Problem</strong> 🐞: If statement in edit_contact checking if display_contact returned a user, returned None
+* <strong>Cause</strong>🛠: display_contact returned only a print of the contact data which resulted in None after loop was finished.
+* <strong>Resolution</strong>✅: Make display_contact return the contact_id after print statements if contact was found, return False if not found. This way         edit_contact if statement could check for True/False Bool.
+---
+* <strong>Problem</strong> 🐞: Gspread update() didn't update worksheet and returned an error.
+* <strong>Cause</strong>🛠: Second parameter was given a list of contact data. Gspread required a nested list within a list.
+* <strong>Resolution</strong>✅: Used seperate "create_contact_list()" function to return a list of contact data. Passed the list of data into a variable which was then stored in it's own list and passed as the second parameter.
 
 # Deployment
 The project was deployed to Heroku.
